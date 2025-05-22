@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Select Image</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: sans-serif;
+      background: url('./image2.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 250px);
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-grid img {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 15px;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-grid img:hover {
+      transform: scale(1.05);
+      border-color: #2ecc71;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    button {
+      margin-top: 40px;
+      padding: 12px 24px;
+      font-size: 1em;
+      background: #e67e22;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #d35400;
+    }
+
+    @media (max-width: 600px) {
+      .image-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">Select an Image</h1>
+  <div class="image-grid" id="imageGrid"></div>
+  <button onclick="goBack()">⬅ Back</button>
+
+  <script>
+    const categories = {
+      Fruits: [
+        "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg", // Apple
+        "https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg", // Banana
+        "https://upload.wikimedia.org/wikipedia/commons/b/bb/Table_grapes_on_white.jpg", // Grapes
+        "https://upload.wikimedia.org/wikipedia/commons/d/d3/Kiwi_aka.jpg" // Kiwi
+      ],
+      Animals: [
+        "https://upload.wikimedia.org/wikipedia/commons/0/0c/Cow_female_black_white.jpg", // Cow
+        "./puppy.jpeg", // Dog
+        "./lion.jpg", // Lion
+        "./tiger.jpg" // Tiger
+      ],
+      Places: [
+        "./place1.jpg", // Golden Gate
+        "./place2.jpg", // Eiffel Tower
+        "./place3.jpg", // Taj Mahal
+        "./place4.webp" // Machu Picchu
+      ],
+      Actors: [
+        "./nani.png", // RDJ
+        "./mahesh.jpg", // Scarlett
+        "./vijay.jpg", // Hemsworth
+        "./prabhas.jpg" // Emma Watson
+      ]
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get("category");
+    document.getElementById("title").textContent = `Select an Image from ${category}`;
+
+    const images = categories[category];
+    const grid = document.getElementById("imageGrid");
+
+    images.forEach(url => {
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "Puzzle Option";
+      img.onclick = () => {
+        window.location.href = `game.html?image=${encodeURIComponent(url)}`;
+      };
+      grid.appendChild(img);
+    });
+
+    function goBack() {
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

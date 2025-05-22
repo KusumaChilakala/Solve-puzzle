@@ -1,0 +1,254 @@
+<!-- game.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Image Puzzle Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: url('./image2.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    #timer {
+      font-size: 1.5em;
+      color: #e74c3c;
+      margin: 10px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .board, .preview {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 2px;
+    }
+
+    .tile {
+      width: 100px;
+      height: 100px;
+      background-size: 300px 300px;
+      cursor: pointer;
+    }
+
+    .tile.empty {
+      background: #ccc;
+      cursor: default;
+    }
+
+    .preview img {
+      width: 300px;
+      height: 300px;
+      border: 2px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #2ecc71;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* New: end card styles */
+    #endCard {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8em;
+      z-index: 999;
+      gap: 20px;
+      display: none; /* hidden by default */
+    }
+
+    #endCard button {
+      font-size: 1.5em;
+      background: #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border: none;
+      color: white;
+      user-select: none;
+      transition: background 0.3s;
+    }
+
+    #endCard button:hover {
+      background: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧩 Puzzle Game</h1>
+  <div id="timer">⏱ 60</div>
+  <div class="container">
+    <div class="board" id="board"></div>
+    <div class="preview"><img id="previewImg" src="" /></div>
+  </div>
+  <button onclick="shuffleTiles()">🔁 Shuffle</button>
+
+  <!-- End Card for success/fail -->
+  <div id="endCard">
+    <div id="endMessage"></div>
+    <div>Score: <span id="score"></span></div>
+    <button id="retryBtn" title="Retry">🔄</button>
+  </div>
+
+  <script>
+  const board = document.getElementById("board");
+  const previewImg = document.getElementById("previewImg");
+  const timerEl = document.getElementById("timer");
+  const endCard = document.getElementById("endCard");
+  const endMessage = document.getElementById("endMessage");
+  const scoreEl = document.getElementById("score");
+  const retryBtn = document.getElementById("retryBtn");
+
+  const params = new URLSearchParams(window.location.search);
+  const image = decodeURIComponent(params.get("image"));
+
+  const size = 3;
+  const total = size * size;
+  let tiles = [];
+  let timer;
+  let timeLeft = 60;
+  let gameOver = false;
+
+  previewImg.src = image;
+
+  function initTiles() {
+    tiles = [];
+    for (let i = 0; i < total; i++) tiles.push(i);
+  }
+
+  function drawTiles() {
+    board.innerHTML = "";
+    tiles.forEach((pos, i) => {
+      const tile = document.createElement("div");
+      tile.classList.add("tile");
+
+      if (pos === total - 1) {
+        tile.classList.add("empty");
+      } else {
+        const x = (pos % size) * -100;
+        const y = Math.floor(pos / size) * -100;
+        tile.style.backgroundImage = `url('${image}')`;
+        tile.style.backgroundPosition = `${x}px ${y}px`;
+      }
+
+      tile.onclick = () => tryMove(i);
+      board.appendChild(tile);
+    });
+  }
+
+  function tryMove(index) {
+    if (gameOver) return;
+
+    const emptyIndex = tiles.indexOf(total - 1);
+    const moves = [
+      emptyIndex - size,
+      emptyIndex + size,
+      emptyIndex % size !== 0 ? emptyIndex - 1 : -1,
+      emptyIndex % size !== size - 1 ? emptyIndex + 1 : -1
+    ];
+
+    if (moves.includes(index)) {
+      [tiles[emptyIndex], tiles[index]] = [tiles[index], tiles[emptyIndex]];
+      drawTiles();
+      checkWin();
+    }
+  }
+
+  function shuffleTiles() {
+    do {
+      tiles.sort(() => Math.random() - 0.5);
+    } while (!isSolvable(tiles));
+    drawTiles();
+    resetTimer();
+    gameOver = false;
+    hideEndCard();
+  }
+
+  function isSolvable(arr) {
+    let inv = 0;
+    for (let i = 0; i < total - 1; i++) {
+      for (let j = i + 1; j < total; j++) {
+        if (arr[i] !== total - 1 && arr[j] !== total - 1 && arr[i] > arr[j]) inv++;
+      }
+    }
+    return inv % 2 === 0;
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timeLeft = 60;
+    timerEl.textContent = `⏱ ${timeLeft}`;
+    timer = setInterval(() => {
+      timeLeft--;
+      timerEl.textContent = `⏱ ${timeLeft}`;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        gameOver = true;
+        showEndCard(false);
+      }
+    }, 1000);
+  }
+
+  function checkWin() {
+    if (tiles.every((v, i) => v === i)) {
+      clearInterval(timer);
+      gameOver = true;
+      showEndCard(true);
+    }
+  }
+
+  // Show end card with result and score
+  function showEndCard(won) {
+    endCard.style.display = "flex";
+    if (won) {
+      endMessage.textContent = "🎉 Puzzle Solved Successfully!";
+      scoreEl.textContent = "1";
+    } else {
+      endMessage.textContent = "⏳ Time's up! ❌ Try Again.";
+      scoreEl.textContent = "0";
+    }
+  }
+
+  // Hide end card
+  function hideEndCard() {
+    endCard.style.display = "none";
+  }
+
+  // Retry button click resets the game
+  retryBtn.onclick = () => {
+    initTiles();
+    shuffleTiles();
+  };
+
+  initTiles();
+  drawTiles();
+  resetTimer();
+  </script>
+
+</body>
+</html>
