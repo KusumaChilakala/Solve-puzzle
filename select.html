@@ -4,79 +4,80 @@
   <meta charset="UTF-8" />
   <title>Select Image</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-    body {
-      font-family: sans-serif;
-      background: url('./image2.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-    }
+  body {
+    font-family: sans-serif;
+    background: url('https://media.istockphoto.com/id/946466164/photo/geometric-pattern-of-jigsaw-puzzle.jpg?s=612x612&w=0&k=20&c=9FJks5NlWKj3cvDay0SEPv9eql_YD9HF-S-Mnj9fRW8=') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+  }
 
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 30px;
-      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-    }
+  h1 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  }
 
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 250px);
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image-grid img {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 15px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .image-grid img:hover {
+    transform: scale(1.05);
+    border-color: #2ecc71;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  button {
+    margin-top: 40px;
+    padding: 12px 24px;
+    font-size: 1em;
+    background: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  button:hover {
+    background: #d35400;
+  }
+
+  @media (max-width: 600px) {
     .image-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 250px);
-      gap: 30px;
-      justify-content: center;
-      align-items: center;
+      grid-template-columns: 1fr;
     }
+  }
+</style>
 
-    .image-grid img {
-      width: 250px;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 15px;
-      cursor: pointer;
-      border: 3px solid transparent;
-      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .image-grid img:hover {
-      transform: scale(1.05);
-      border-color: #2ecc71;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    }
-
-    button {
-      margin-top: 40px;
-      padding: 12px 24px;
-      font-size: 1em;
-      background: #e67e22;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background: #d35400;
-    }
-
-    @media (max-width: 600px) {
-      .image-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
 </head>
 <body>
   <h1 id="title">Select an Image</h1>
@@ -93,21 +94,21 @@
       ],
       Animals: [
         "https://upload.wikimedia.org/wikipedia/commons/0/0c/Cow_female_black_white.jpg", // Cow
-        "./puppy.jpeg", // Dog
-        "./lion.jpg", // Lion
-        "./tiger.jpg" // Tiger
+        "https://images.unsplash.com/photo-1507146426996-ef05306b995a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0", // Dog
+        "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg", // Lion
+        "https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg" // Tiger
       ],
       Places: [
-        "./place1.jpg", // Golden Gate
-        "./place2.jpg", // Eiffel Tower
-        "./place3.jpg", // Taj Mahal
-        "./place4.webp" // Machu Picchu
+        "https://www.fabhotels.com/blog/wp-content/uploads/2019/05/Charminar_600.jpg", // Golden Gate
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVQlZHONM4AatbQJH7RGjWWmGHpwysj4Fp1Q&s", // Eiffel Tower
+        "https://upload.wikimedia.org/wikipedia/commons/d/da/Taj-Mahal.jpg", // Taj Mahal
+        "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg" // Machu Picchu
       ],
       Actors: [
-        "./nani.png", // RDJ
-        "./mahesh.jpg", // Scarlett
-        "./vijay.jpg", // Hemsworth
-        "./prabhas.jpg" // Emma Watson
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4xQVABPqDg5nr8C2o2QjL2AjOq9hEvcCtUg&s", // Nani
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqFkUHPcIc3CNRpYU9zvMuLjzxwx8Y_q9e5A&s", // Mahesh Babu
+        "https://imgc.ap7am.com/bimg/cr-20250429tn6810582f7ab39.jpg", // Vijay Deverakonda
+        "https://assets.gqindia.com/photos/5d67bccd92463800081c1bb4/16:9/w_1920,c_limit/Prabhas%20movies%20.jpg" // Prabhas
       ]
     };
 
